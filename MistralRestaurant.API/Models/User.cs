@@ -15,5 +15,7 @@ namespace MistralRestaurant.API.Models
 
         public byte[] PasswordSalt { get; set; }
 
+        public List<RecipeCategory> RecipeCategories { get; set; }
+
     }
 }

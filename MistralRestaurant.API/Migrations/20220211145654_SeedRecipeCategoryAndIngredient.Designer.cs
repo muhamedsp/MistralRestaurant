@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MistralRestaurant.API.Data;
 
 namespace MistralRestaurant.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220211145654_SeedRecipeCategoryAndIngredient")]
+    partial class SeedRecipeCategoryAndIngredient
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,12 +145,7 @@ namespace MistralRestaurant.API.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("RecipeCategories");
 
@@ -224,18 +221,6 @@ namespace MistralRestaurant.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("MistralRestaurant.API.Models.RecipeCategory", b =>
-                {
-                    b.HasOne("MistralRestaurant.API.Models.User", null)
-                        .WithMany("RecipeCategories")
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("MistralRestaurant.API.Models.User", b =>
-                {
-                    b.Navigation("RecipeCategories");
                 });
 #pragma warning restore 612, 618
         }

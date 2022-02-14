@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MistralRestaurant.API.Data;
+using MistralRestaurant.API.Services.RecipeCategoryService;
 using Swashbuckle.AspNetCore.Filters;
 using System;
 using System.Collections.Generic;
@@ -65,6 +66,7 @@ namespace MistralRestaurant.API
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+            services.AddScoped<IRecipeCategoryService, RecipeCategoryService>();
 
         }
 
