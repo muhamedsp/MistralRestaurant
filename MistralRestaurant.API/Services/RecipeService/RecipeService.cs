@@ -382,5 +382,93 @@ namespace MistralRestaurant.API.Services.RecipeServices
 
             return serviceResponse;
         }
+
+        public async Task<ServiceResponse<List<GetRecipeDto>>> SearchRecipeService(string keyword)
+        {
+            var serviceResponse = new ServiceResponse<List<GetRecipeDto>>();
+
+            try
+            {
+                if (keyword.Length < 3)
+                {
+                    serviceResponse.Success = false;
+                    serviceResponse.Message = "Keyword shoud contain at least 3 characters.";
+                    return serviceResponse;
+                }
+
+                List<GetRecipeDto> listWithKeyword = new List<GetRecipeDto>();
+
+                var dbRecipes = await _context.Recipes
+                                            .Include(r => r.RecipeCategory).ToListAsync();
+
+                var dbIngredients = await _context.Ingredients.ToListAsync();
+
+                var dbRecipeIngredients = await _context.IngredientaAndRecipes.ToListAsync();
+
+
+                foreach (var item in dbRecipes)
+                {
+                    if (item.Name.ToLower().Contains(keyword.ToLower()))
+                    {
+                        if (!IsRecipeExistInList(listWithKeyword, item.Id))
+                        {
+                            listWithKeyword.Add(_mapper.Map<GetRecipeDto>(item));
+                        }
+                    }
+                }
+
+                foreach (var item in dbIngredients)
+                {
+                    if (item.Name.ToLower().Contains(keyword.ToLower()))
+                    {
+                        foreach (var itemRI in dbRecipeIngredients)
+                        {
+                            if (itemRI.IngredientId == item.Id)
+                            {
+                                if (!IsRecipeExistInList(listWithKeyword, itemRI.RecipeId))
+                                {
+                                    var recipe = dbRecipes.First(r => r.Id == itemRI.RecipeId);
+
+                                    listWithKeyword.Add(_mapper.Map<GetRecipeDto>(recipe));
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (0 == listWithKeyword.Count)
+                {
+                    serviceResponse.Success = false;
+                    serviceResponse.Message = "List is empty.";
+                    return serviceResponse;
+                }
+
+                serviceResponse.Data = listWithKeyword;
+
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = ex.Message;
+            }
+
+            return serviceResponse;
+        }
+
+        protected bool IsRecipeExistInList(List<GetRecipeDto> list, int recipeId)
+        {
+            bool isExist = false;
+
+            foreach (var item in list)
+            {
+                if (item.Id == recipeId)
+                {
+                    isExist = true;
+                    break;
+                }
+            }
+
+            return isExist;
+        }
     }
 }

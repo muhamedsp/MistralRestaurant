@@ -98,6 +98,20 @@ namespace MistralRestaurant.API.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet("GetRecipes/{keyword}")]
+        public async Task<ActionResult<ServiceResponse<GetRecipeDto>>> GetRecipeById(string keyword)
+        {
+            var listOfRecipes = await _recipeService.SearchRecipeService(keyword);
+
+            if (null != listOfRecipes.Data)
+            {
+                return Ok(listOfRecipes);
+            }
+
+            return NotFound(listOfRecipes);
+        }
+
+        [AllowAnonymous]
         [HttpPost("Recipe/AddIngeadient")]
         public async Task<ActionResult<ServiceResponse<List<GetRecipeDto>>>> AddIngreadientInRecipe(AddRecipeIngredientDto newIngreadientInRecipe)
         {

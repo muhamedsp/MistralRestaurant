@@ -13,5 +13,7 @@ namespace MistralRestaurant.API.Services.RecipeServices
         Task<ServiceResponse<List<GetRecipeDto>>> AddRecipeService(AddRecipeDto recipe);
         Task<ServiceResponse<GetRecipeDto>> AddIngredientToRecipeService(AddRecipeIngredientDto addIngredientToRecipe);
         Task<ServiceResponse<GetRecipeDto>> DeleteIngredientToRecipeService(DeleteRecipeIngredientDto deleteIngredientToRecipe);
+        Task<ServiceResponse<List<GetRecipeDto>>> SearchRecipeService(string keyword);
+
     }
 }
