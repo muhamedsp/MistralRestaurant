@@ -108,7 +108,10 @@ namespace MistralRestaurant.API.Services.RecipeServices
                         Name = ingredient_temp.Name,
                         PacketQuantity = ingredient_temp.PacketQuantity,
                         PacketQuantityPrice = ingredient_temp.PacketQuantityPrice,
-                        Recipes = ingredient_temp.Recipes
+                        Recipes = ingredient_temp.Recipes,
+                        IngredientQuantityPrice = GetPriceOfIngredient(item.IngredientQuantity,
+                                                                       item.MeasureType,
+                                                                       ingredient_temp)
                     };
 
                     Ingredients.Add(ingredient);
@@ -214,8 +217,11 @@ namespace MistralRestaurant.API.Services.RecipeServices
                             Name = ingredient_temp.Name,
                             PacketQuantity = ingredient_temp.PacketQuantity,
                             PacketQuantityPrice = ingredient_temp.PacketQuantityPrice,
-                            Recipes = ingredient_temp.Recipes
-                        };
+                            Recipes = ingredient_temp.Recipes,
+                            IngredientQuantityPrice = GetPriceOfIngredient(item.IngredientQuantity,
+                                                                           item.MeasureType,
+                                                                           ingredient_temp)
+                    };
 
                         Ingredients.Add(ingredient);
                     }
@@ -319,7 +325,10 @@ namespace MistralRestaurant.API.Services.RecipeServices
                         Name = ingredient_temp.Name,
                         PacketQuantity = ingredient_temp.PacketQuantity,
                         PacketQuantityPrice = ingredient_temp.PacketQuantityPrice,
-                        Recipes = ingredient_temp.Recipes
+                        Recipes = ingredient_temp.Recipes,
+                        IngredientQuantityPrice = GetPriceOfIngredient(item.IngredientQuantity,
+                                                                           item.MeasureType,
+                                                                           ingredient_temp)
                     };
 
                     if (item.IngredientId == deleteIngredientToRecipe.IngredientId 

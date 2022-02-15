@@ -12,6 +12,7 @@ namespace MistralRestaurant.API.Dtos.Recipe
         public MeasureType MeasureType { get; set; }
         public double PacketQuantity { get; set; }
         public double PacketQuantityPrice { get; set; }
+        public double IngredientQuantityPrice { get; set; }
         public double IngredientQuantity { get; set; }
         public MeasureType IngredientMeasureType { get; set; }
     }

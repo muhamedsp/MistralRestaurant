@@ -14,6 +14,7 @@ namespace MistralRestaurant.API.Models
         public double PacketQuantityPrice { get; set; } = 0;
         public double IngredientQuantity { get; set; }
         public MeasureType IngredientMeasureType { get; set; }
+        public double IngredientQuantityPrice { get; set; } = 0;
         public List<Recipe> Recipes { get; set; } = new List<Recipe>();
     }
 }
