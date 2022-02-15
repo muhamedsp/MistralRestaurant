@@ -221,7 +221,7 @@ namespace MistralRestaurant.API.Services.RecipeServices
                             IngredientQuantityPrice = GetPriceOfIngredient(item.IngredientQuantity,
                                                                            item.MeasureType,
                                                                            ingredient_temp)
-                    };
+                        };
 
                         Ingredients.Add(ingredient);
                     }
@@ -412,6 +412,22 @@ namespace MistralRestaurant.API.Services.RecipeServices
                     {
                         if (!IsRecipeExistInList(listWithKeyword, item.Id))
                         {
+                            var recipe = dbRecipes.First(r => r.Id == item.Id);
+
+                            recipe.Ingredients = GetIngredientsByRecipeId(recipe.Id);
+
+                            GetRecipeDto recipeDto = new GetRecipeDto()
+                            {
+                                Id = recipe.Id,
+                                Name = recipe.Name,
+                                ManufacturingPrice = recipe.ManufacturingPrice,
+                                RecipeCategory = _mapper.Map<GetRecipeCategoryDto>(recipe.RecipeCategory),
+                                RecipeCategoryId = recipe.RecipeCategoryId,
+                                Ingredients = recipe.Ingredients.Select(c => _mapper.Map<GetRecipeIngredientDto>(c)).ToList()
+                            };
+
+                            listWithKeyword.Add(recipeDto);
+
                             listWithKeyword.Add(_mapper.Map<GetRecipeDto>(item));
                         }
                     }
@@ -429,7 +445,19 @@ namespace MistralRestaurant.API.Services.RecipeServices
                                 {
                                     var recipe = dbRecipes.First(r => r.Id == itemRI.RecipeId);
 
-                                    listWithKeyword.Add(_mapper.Map<GetRecipeDto>(recipe));
+                                    recipe.Ingredients = GetIngredientsByRecipeId(recipe.Id);
+
+                                    GetRecipeDto recipeDto = new GetRecipeDto()
+                                    {
+                                        Id = recipe.Id,
+                                        Name = recipe.Name,
+                                        ManufacturingPrice = recipe.ManufacturingPrice,
+                                        RecipeCategory = _mapper.Map<GetRecipeCategoryDto>(recipe.RecipeCategory),
+                                        RecipeCategoryId = recipe.RecipeCategoryId,
+                                        Ingredients = recipe.Ingredients.Select(c => _mapper.Map<GetRecipeIngredientDto>(c)).ToList()
+                                    };
+
+                                    listWithKeyword.Add(recipeDto);
                                 }
                             }
                         }
@@ -453,6 +481,38 @@ namespace MistralRestaurant.API.Services.RecipeServices
             }
 
             return serviceResponse;
+        }
+
+        protected List<Ingredient> GetIngredientsByRecipeId(int recipeId)
+        {
+            List<Ingredient> Ingredients = new List<Ingredient>();
+
+            var dbRecipeIngredients = _context.IngredientaAndRecipes
+                                          .Where(r => r.RecipeId == recipeId).ToList();
+
+            foreach (IngredientRecipe item in dbRecipeIngredients)
+            {
+                Ingredient ingredient_temp = _context.Ingredients.First(i => i.Id == item.IngredientId);
+
+                Ingredient ingredient = new Ingredient()
+                {
+                    Id = item.Id,
+                    IngredientMeasureType = item.MeasureType,
+                    IngredientQuantity = item.IngredientQuantity,
+                    MeasureType = ingredient_temp.MeasureType,
+                    Name = ingredient_temp.Name,
+                    PacketQuantity = ingredient_temp.PacketQuantity,
+                    PacketQuantityPrice = ingredient_temp.PacketQuantityPrice,
+                    Recipes = ingredient_temp.Recipes,
+                    IngredientQuantityPrice = GetPriceOfIngredient(item.IngredientQuantity,
+                                                                   item.MeasureType,
+                                                                   ingredient_temp)
+                };
+
+                Ingredients.Add(ingredient);
+            }
+
+            return Ingredients;
         }
 
         protected bool IsRecipeExistInList(List<GetRecipeDto> list, int recipeId)
