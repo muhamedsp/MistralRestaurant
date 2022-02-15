@@ -8,7 +8,6 @@ namespace MistralRestaurant.API.Dtos.Recipe
     public class AddRecipeDto
     {
         public string Name { get; set; }
-        public double ManufacturingPrice { get; set; } = 0;
         public int RecipeCategoryId { get; set; }
     }
 }

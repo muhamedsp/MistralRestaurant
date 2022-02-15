@@ -10,6 +10,5 @@ namespace MistralRestaurant.API.Dtos.RecipeCategory
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<GetRecipeDto> Recipes { get; set; }
     }
 }

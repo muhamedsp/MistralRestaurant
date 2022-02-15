@@ -4,13 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MistralRestaurant.API.Dtos.Ingredient
+namespace MistralRestaurant.API.Dtos.Recipe
 {
-    public class AddIngredientDto
+    public class GetRecipeIngredientDto
     {
         public string Name { get; set; }
         public MeasureType MeasureType { get; set; }
         public double PacketQuantity { get; set; }
         public double PacketQuantityPrice { get; set; }
+        public double IngredientQuantity { get; set; }
+        public MeasureType IngredientMeasureType { get; set; }
     }
 }

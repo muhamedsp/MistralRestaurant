@@ -1,5 +1,4 @@
-﻿using MistralRestaurant.API.Dtos.Ingredient;
-using MistralRestaurant.API.Dtos.RecipeCategory;
+﻿using MistralRestaurant.API.Dtos.RecipeCategory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +11,9 @@ namespace MistralRestaurant.API.Dtos.Recipe
         public int Id { get; set; }
         public string Name { get; set; }
         public double ManufacturingPrice { get; set; }
-        public List<GetIngredientDto> Ingredients { get; set; }
+        public List<GetRecipeIngredientDto> Ingredients { get; set; }
         public GetRecipeCategoryDto RecipeCategory { get; set; }
         public int RecipeCategoryId { get; set; }
+
     }
 }

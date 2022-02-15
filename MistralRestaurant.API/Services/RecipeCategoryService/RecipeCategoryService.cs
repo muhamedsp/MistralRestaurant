@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using MistralRestaurant.API.Data;
+using MistralRestaurant.API.Dtos.Recipe;
 using MistralRestaurant.API.Dtos.RecipeCategory;
 using MistralRestaurant.API.Models;
 using System;
@@ -27,7 +28,7 @@ namespace MistralRestaurant.API.Services.RecipeCategoryService
 
         private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-        public async Task<ServiceResponse<List<GetRecipeCategoryDto>>> GetAllRecipeCategoriesServices(int page, int numberItems)
+        public async Task<ServiceResponse<List<GetRecipeCategoryDto>>> GetRecipeCategoriesByPageAndNumberServices(int page, int numberItems)
         {
             var serviceResponse = new ServiceResponse<List<GetRecipeCategoryDto>>();
 
@@ -67,32 +68,39 @@ namespace MistralRestaurant.API.Services.RecipeCategoryService
             {
                 serviceResponse.Success = false;
                 serviceResponse.Message = ex.Message;
-                throw;
             }
 
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<GetRecipeCategoryDto>> GetRecipeCategoryServices(int id)
+        public async Task<ServiceResponse<List<GetRecipeForRecipeCategoryDto>>> GetRecipeByCategoryServices(int recipeCategoryId)
         {
-            var serviceResponse = new ServiceResponse<GetRecipeCategoryDto>();
+            var serviceResponse = new ServiceResponse<List<GetRecipeForRecipeCategoryDto>>();
 
             try
             {
-                int maxIdFromDB = _context.RecipeCategories.Max(r => r.Id);
+                var recipeCategory = _context.RecipeCategories.Where(r => r.Id == recipeCategoryId);
 
-                if (id > 0 && maxIdFromDB >= id)
+                if (recipeCategoryId > 0 && null != recipeCategory)
                 {
-                    var dbRecipeCategories = await _context.RecipeCategories.FirstAsync(r => r.Id == id);
+                    var dbRecipes = await _context.Recipes.Where(r => r.RecipeCategoryId == recipeCategoryId).ToListAsync();
 
-                    serviceResponse.Data = _mapper.Map<GetRecipeCategoryDto>(dbRecipeCategories);
+                    if (0 != dbRecipes.Count)
+                    {
+                        serviceResponse.Data = dbRecipes.Select(c => _mapper.Map<GetRecipeForRecipeCategoryDto>(c)).ToList();
+                    }
+                    else
+                    {
+                        serviceResponse.Message = "Recipes not found.";
+                    }
                 }
                 else
                 {
                     serviceResponse.Success = false;
-                    if (id > 0)
+
+                    if (recipeCategoryId > 0)
                     {
-                        serviceResponse.Message = "Recipe not found.";
+                        serviceResponse.Message = "Recipe category not found.";
                     }
                     else
                     {
@@ -107,8 +115,23 @@ namespace MistralRestaurant.API.Services.RecipeCategoryService
             {
                 serviceResponse.Success = false;
                 serviceResponse.Message = ex.Message;
-                throw;
             }
+
+            return serviceResponse;
+        }
+
+        public async Task<ServiceResponse<List<GetRecipeCategoryDto>>> AddRecipeCategoryServices(AddRecipeCategoryDto recipeCategory)
+        {
+            var serviceResponse = new ServiceResponse<List<GetRecipeCategoryDto>>();
+
+            RecipeCategory recipe = _mapper.Map<RecipeCategory>(recipeCategory);
+
+            _context.RecipeCategories.Add(recipe);
+
+            await _context.SaveChangesAsync();
+
+            serviceResponse.Data = await _context.RecipeCategories
+                                    .Select(c => _mapper.Map<GetRecipeCategoryDto>(c)).ToListAsync();
 
             return serviceResponse;
         }

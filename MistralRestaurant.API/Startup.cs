@@ -13,10 +13,12 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MistralRestaurant.API.Data;
 using MistralRestaurant.API.Services.RecipeCategoryService;
+using MistralRestaurant.API.Services.RecipeServices;
 using Swashbuckle.AspNetCore.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace MistralRestaurant.API
@@ -64,9 +66,17 @@ namespace MistralRestaurant.API
                     };
                 });
 
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = null;//ReferenceHandler.Preserve;
+                options.JsonSerializerOptions.WriteIndented = true;
+            });
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddScoped<IRecipeCategoryService, RecipeCategoryService>();
+
+            services.AddScoped<IRecipeService, RecipeService>();
 
         }
 

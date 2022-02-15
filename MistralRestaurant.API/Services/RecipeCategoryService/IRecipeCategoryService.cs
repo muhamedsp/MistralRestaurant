@@ -1,4 +1,5 @@
-﻿using MistralRestaurant.API.Dtos.RecipeCategory;
+﻿using MistralRestaurant.API.Dtos.Recipe;
+using MistralRestaurant.API.Dtos.RecipeCategory;
 using MistralRestaurant.API.Models;
 using System;
 using System.Collections.Generic;
@@ -9,8 +10,9 @@ namespace MistralRestaurant.API.Services.RecipeCategoryService
 {
     public interface IRecipeCategoryService
     {
-        Task<ServiceResponse<List<GetRecipeCategoryDto>>> GetAllRecipeCategoriesServices(int page, int numberItems);
-        Task<ServiceResponse<GetRecipeCategoryDto>> GetRecipeCategoryServices(int id);
+        Task<ServiceResponse<List<GetRecipeCategoryDto>>> GetRecipeCategoriesByPageAndNumberServices(int page, int numberItems);
+        Task<ServiceResponse<List<GetRecipeForRecipeCategoryDto>>> GetRecipeByCategoryServices(int recipeCategoryId);
+        Task<ServiceResponse<List<GetRecipeCategoryDto>>> AddRecipeCategoryServices(AddRecipeCategoryDto recipeCategory);
 
     }
 }

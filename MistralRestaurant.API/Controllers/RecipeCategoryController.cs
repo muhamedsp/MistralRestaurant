@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MistralRestaurant.API.Dtos.Recipe;
 using MistralRestaurant.API.Dtos.RecipeCategory;
 using MistralRestaurant.API.Models;
 using MistralRestaurant.API.Services.RecipeCategoryService;
+using MistralRestaurant.API.Services.RecipeServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,19 +17,21 @@ namespace MistralRestaurant.API.Controllers
     [Route("[controller]")]
     public class RecipeCategoryController : ControllerBase
     {
-
         private readonly IRecipeCategoryService _recipeCategoryService;
+        private readonly IRecipeService _recipeService;
 
-        public RecipeCategoryController(IRecipeCategoryService recipeCategoryService)
+        public RecipeCategoryController(IRecipeCategoryService recipeCategoryService,
+                                        IRecipeService recipeService)
         {
             _recipeCategoryService = recipeCategoryService;
+            _recipeService = recipeService;
         }
 
         [AllowAnonymous]
-        [HttpGet("GetAll")]
-        public async Task<ActionResult<ServiceResponse<List<GetRecipeCategoryDto>>>> Get(int page, int numberItems)
+        [HttpGet("GetRecipeCategories")]
+        public async Task<ActionResult<ServiceResponse<List<GetRecipeCategoryDto>>>> GetRecipeCategories(int page, int numberItems)
         {
-            var listOfRecipes = await _recipeCategoryService.GetAllRecipeCategoriesServices(page, numberItems);
+            var listOfRecipes = await _recipeCategoryService.GetRecipeCategoriesByPageAndNumberServices(page, numberItems);
 
             if (null != listOfRecipes.Data)
             {
@@ -38,10 +42,80 @@ namespace MistralRestaurant.API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ServiceResponse<List<GetRecipeCategoryDto>>>> GetRecipe(int id)
+        [HttpGet("{recipeCategoryId}")]
+        public async Task<ActionResult<ServiceResponse<List<GetRecipeForRecipeCategoryDto>>>> GetRecipesByCategory(int recipeCategoryId)
         {
-            var recipe = await _recipeCategoryService.GetRecipeCategoryServices(id);
+            var recipe = await _recipeCategoryService.GetRecipeByCategoryServices(recipeCategoryId);
+
+            if (null != recipe.Data)
+            {
+                return Ok(recipe);
+            }
+
+            return NotFound(recipe);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<ActionResult<ServiceResponse<List<GetRecipeCategoryDto>>>> AddRecipe(AddRecipeCategoryDto recipeCategory)
+        {
+            var recipe = await _recipeCategoryService.AddRecipeCategoryServices(recipeCategory);
+
+            if (null != recipe.Data)
+            {
+                return Ok(recipe);
+            }
+
+            return NotFound(recipe);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("Recipe")]
+        public async Task<ActionResult<ServiceResponse<List<GetRecipeDto>>>> AddRecipe(AddRecipeDto newRecipe)
+        {
+            var recipe = await _recipeService.AddRecipeService(newRecipe);
+
+            if (null != recipe.Data)
+            {
+                return Ok(recipe);
+            }
+
+            return NotFound(recipe);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("Recipe/{recipeId}")]
+        public async Task<ActionResult<ServiceResponse<GetRecipeDto>>> GetRecipeById(int recipeId)
+        {
+            var listOfRecipes = await _recipeService.GetRecipesByIdService(recipeId);
+
+            if (null != listOfRecipes.Data)
+            {
+                return Ok(listOfRecipes);
+            }
+
+            return NotFound(listOfRecipes);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("Recipe/AddIngeadient")]
+        public async Task<ActionResult<ServiceResponse<List<GetRecipeDto>>>> AddIngreadientInRecipe(AddRecipeIngredientDto newIngreadientInRecipe)
+        {
+            var recipe = await _recipeService.AddIngredientToRecipeService(newIngreadientInRecipe);
+
+            if (null != recipe.Data)
+            {
+                return Ok(recipe);
+            }
+
+            return NotFound(recipe);
+        }
+
+        [AllowAnonymous]
+        [HttpDelete("Recipe/DeleteIngeadient")]
+        public async Task<ActionResult<ServiceResponse<List<GetRecipeDto>>>> DeleteIngreadientInRecipe(DeleteRecipeIngredientDto deleteIngreadientInRecipe)
+        {
+            var recipe = await _recipeService.DeleteIngredientToRecipeService(deleteIngreadientInRecipe);
 
             if (null != recipe.Data)
             {
@@ -51,5 +125,4 @@ namespace MistralRestaurant.API.Controllers
             return NotFound(recipe);
         }
     }
-    
 }

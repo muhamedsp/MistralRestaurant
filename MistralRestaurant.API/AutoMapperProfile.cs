@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MistralRestaurant.API.Dtos.Recipe;
 using MistralRestaurant.API.Dtos.RecipeCategory;
 using MistralRestaurant.API.Models;
 using System;
@@ -13,6 +14,12 @@ namespace DemoApp.Api
         public AutoMapperProfile()
         {
             CreateMap<RecipeCategory, GetRecipeCategoryDto>();
+            CreateMap<AddRecipeCategoryDto, RecipeCategory>();
+            CreateMap<Recipe, GetRecipeDto>();
+            CreateMap<AddRecipeDto, Recipe>();          
+            CreateMap<Recipe, GetRecipeForRecipeCategoryDto>();
+            CreateMap<Ingredient, GetRecipeIngredientDto>();
+
         }
     }
 }

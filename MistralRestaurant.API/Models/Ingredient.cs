@@ -9,8 +9,11 @@ namespace MistralRestaurant.API.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public MeasureType MeasureType { get; set; }
-        public double PacketQuantity { get; set; }
-        public double PacketQuantityPrice { get; set; }
+        public MeasureType MeasureType { get; set; } = MeasureType.unit;
+        public double PacketQuantity { get; set; } = 0;
+        public double PacketQuantityPrice { get; set; } = 0;
+        public double IngredientQuantity { get; set; }
+        public MeasureType IngredientMeasureType { get; set; }
+        public List<Recipe> Recipes { get; set; } = new List<Recipe>();
     }
 }
