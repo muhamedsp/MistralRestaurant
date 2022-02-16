@@ -27,7 +27,6 @@ namespace MistralRestaurant.API.Controllers
             _recipeService = recipeService;
         }
 
-        [AllowAnonymous]
         [HttpGet("GetRecipeCategories")]
         public async Task<ActionResult<ServiceResponse<List<GetRecipeCategoryDto>>>> GetRecipeCategories(int page, int numberItems)
         {
@@ -41,7 +40,6 @@ namespace MistralRestaurant.API.Controllers
             return NotFound(listOfRecipes);
         }
 
-        [AllowAnonymous]
         [HttpGet("{recipeCategoryId}")]
         public async Task<ActionResult<ServiceResponse<List<GetRecipeForRecipeCategoryDto>>>> GetRecipesByCategory(int recipeCategoryId)
         {
@@ -55,7 +53,6 @@ namespace MistralRestaurant.API.Controllers
             return NotFound(recipe);
         }
 
-        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<List<GetRecipeCategoryDto>>>> AddRecipe(AddRecipeCategoryDto recipeCategory)
         {
@@ -69,7 +66,6 @@ namespace MistralRestaurant.API.Controllers
             return NotFound(recipe);
         }
 
-        [AllowAnonymous]
         [HttpPost("Recipe")]
         public async Task<ActionResult<ServiceResponse<List<GetRecipeDto>>>> AddRecipe(AddRecipeDto newRecipe)
         {
@@ -83,7 +79,6 @@ namespace MistralRestaurant.API.Controllers
             return NotFound(recipe);
         }
 
-        [AllowAnonymous]
         [HttpGet("Recipe/{recipeId}")]
         public async Task<ActionResult<ServiceResponse<GetRecipeDto>>> GetRecipeById(int recipeId)
         {
@@ -97,7 +92,6 @@ namespace MistralRestaurant.API.Controllers
             return NotFound(listOfRecipes);
         }
 
-        [AllowAnonymous]
         [HttpGet("GetRecipes/{keyword}")]
         public async Task<ActionResult<ServiceResponse<GetRecipeDto>>> GetRecipeById(string keyword)
         {
@@ -111,7 +105,6 @@ namespace MistralRestaurant.API.Controllers
             return NotFound(listOfRecipes);
         }
 
-        [AllowAnonymous]
         [HttpPost("Recipe/AddIngeadient")]
         public async Task<ActionResult<ServiceResponse<List<GetRecipeDto>>>> AddIngreadientInRecipe(AddRecipeIngredientDto newIngreadientInRecipe)
         {
@@ -125,7 +118,6 @@ namespace MistralRestaurant.API.Controllers
             return NotFound(recipe);
         }
 
-        [AllowAnonymous]
         [HttpDelete("Recipe/DeleteIngeadient")]
         public async Task<ActionResult<ServiceResponse<List<GetRecipeDto>>>> DeleteIngreadientInRecipe(DeleteRecipeIngredientDto deleteIngreadientInRecipe)
         {
